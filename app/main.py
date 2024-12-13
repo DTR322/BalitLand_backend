@@ -1,8 +1,5 @@
 from fastapi import FastAPI
 
-import os
-
-from app.models import student
 
 app = FastAPI()
 
