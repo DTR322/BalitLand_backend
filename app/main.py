@@ -7,3 +7,7 @@ app = FastAPI()
 @app.get("/")
 def home_page():
     return {"message": "Главная"}
+
+
+''' ХУЙЙЙЙЙЙЙЙЙЙЙ
+'''
