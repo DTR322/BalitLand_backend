@@ -6,10 +6,10 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.orm import DeclarativeBase, declared_attr, Mapped, mapped_column
 
 
-DB_HOST = 'localhost'
+DB_HOST = 'LocalHost'
 DB_PORT = '5432'
 DB_NAME = 'postgres'
-DB_USER = 'admin'
+DB_USER = 'postgres'
 DB_PASSWORD = '123'
 
 DATABASE_URL = f'postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
