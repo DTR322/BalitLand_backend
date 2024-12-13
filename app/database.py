@@ -10,7 +10,7 @@ DB_HOST = 'localhost'
 DB_PORT = '5432'
 DB_NAME = 'postgres'
 DB_USER = 'admin'
-DB_PASSWORD = '123'
+DB_PASSWORD = ''
 
 DATABASE_URL = f'postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
 
