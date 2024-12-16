@@ -12,7 +12,7 @@ async def get_all_students():
 
 @router.post("/add/")
 async def register_user(student: SStudentAdd) -> dict:
-    check = await StudentDAO.add_student(**student.dict())
+    check = await StudentDAO.add(**student.dict())
     if check:
         return {"message": "Ученик успешно добавлен!", "student": student}
     else:

@@ -1,4 +1,5 @@
 from sqlalchemy import select
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.database import async_session_maker
@@ -18,14 +19,16 @@ class BaseDAO:
     async def add(cls, **values):
         async with async_session_maker() as session:
             async with session.begin():
-                new_instance = cls.model(**values)
-                session.add(new_instance)
+                # Вставка нового студента
+                stmt = insert(cls.model).values(**values).returning(cls.model.id,)
+                result = await session.execute(stmt)
+                new_instance_id = result.fetchone()
                 try:
                     await session.commit()
                 except SQLAlchemyError as e:
                     await session.rollback()
                     raise e
-                return new_instance
+                return new_instance_id
 
     @classmethod
     async def find_one_or_none_by_id(cls, data_id: int):
