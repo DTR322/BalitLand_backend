@@ -23,15 +23,15 @@ async def register_user(student: SStudentAdd) -> dict:
 async def update_student_description(student: SStudentUpdate) -> dict:
     update_fields = {}
 
-    if student.student_surname:
+    if student.password:
         update_fields['password'] = student.password
-    if student.parent_name:
+    if student.phone_number:
         update_fields['phone_number'] = student.phone_number
-    if student.parent_surname:
+    if student.parent_first_name:
         update_fields['parent_first_name'] = student.parent_first_name
-    if student.parent_contact:
+    if student.parent_last_name:
         update_fields['parent_last_name'] = student.parent_last_name
-    if student.student_description:
+    if student.klass:
         update_fields['klass'] = student.klass
 
     if not update_fields:
