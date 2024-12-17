@@ -1,5 +1,5 @@
 from sqlalchemy import select
-from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy import insert
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.database import async_session_maker
