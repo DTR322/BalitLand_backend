@@ -1,5 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from app.students.dao import StudentDAO
+from app.students.rb import RBStudent
 from app.students.schemas import SStudent, SStudentAdd, SStudentUpdate
 
 router = APIRouter(prefix='/students', tags=['Работа с учениками'])
@@ -11,8 +12,8 @@ async def get_all_students():
 
 
 @router.post("/add/")
-async def register_user(student: SStudentAdd) -> dict:
-    check = await StudentDAO.add(**student.dict())
+async def register_user(student: RBStudent = Depends()) -> SStudentAdd | dict:
+    check = await StudentDAO.add(**student.to_dict())
     if check:
         return {"message": "Ученик успешно добавлен!", "student": student}
     else:
@@ -20,7 +21,7 @@ async def register_user(student: SStudentAdd) -> dict:
 
 
 @router.put("/update_description/")
-async def update_student_description(student: SStudentUpdate) -> dict:
+async def update_student_description(student: RBStudent = Depends()) -> SStudentUpdate | dict:
     update_fields = {}
 
     if student.password:
