@@ -1,7 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy import insert
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.future import select
 from sqlalchemy import update as sqlalchemy_update, delete as sqlalchemy_delete
 from app.database import async_session_maker
 
@@ -21,7 +20,7 @@ class BaseDAO:
         async with async_session_maker() as session:
             async with session.begin():
                 # Вставка нового студента
-                stmt = insert(cls.model).values(**values).returning(cls.model.id, )
+                stmt = insert(cls.model).values(**values).returning(cls.model.id)
                 result = await session.execute(stmt)
                 new_instance_id = result.fetchone()
                 try:
