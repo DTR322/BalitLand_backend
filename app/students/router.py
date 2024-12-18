@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends
+from typing import Optional
+from fastapi import APIRouter, Depends, Query
 from app.students.dao import StudentDAO
 from app.students.rb import RBStudent
 from app.students.schemas import SStudent, SStudentAdd, SStudentUpdate
@@ -6,9 +7,9 @@ from app.students.schemas import SStudent, SStudentAdd, SStudentUpdate
 router = APIRouter(prefix='/students', tags=['Работа с учениками'])
 
 
-@router.get("/", summary="Получить всех учеников", response_model=list[SStudent])
-async def get_all_students():
-    return await StudentDAO.find_all()
+@router.get("/", summary="Получить всех студентов")
+async def get_all_students(request_body: RBStudent = Depends()) -> list[SStudent]:
+    return await StudentDAO.find_all(**request_body.to_dict())
 
 
 @router.post("/add/")

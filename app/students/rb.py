@@ -22,7 +22,7 @@ class RBStudent:
 
     def to_dict(self) -> dict:
         data = {'id': self.id, 'parent_first_name': self.parent_first_name, 'parent_last_name': self.parent_last_name,
-                'klass': self.klass, 'Пароль': self.password, 'Логин': self.login, 'Номер телефона': self.phone_number}
+                'klass': self.klass, 'password': self.password, 'login': self.login, 'phone_number': self.phone_number}
         filtered_data = {key: value for key, value in data.items() if value is not None}
         return filtered_data
 
