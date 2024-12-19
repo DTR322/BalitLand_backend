@@ -20,9 +20,9 @@ class SStudent(BaseModel):
     phone_number: str = Field(..., description="Номер телефона в международном формате, начинающийся с '+'")
 
 
-
 class SStudentAdd(BaseModel):
-    login: str = Field(..., min_length=3, max_length=32, description="Логин должен быть в диапазоне от 3 до 32 символов")
+    login: str = Field(..., min_length=3, max_length=32,
+                       description="Логин должен быть в диапазоне от 3 до 32 символов")
     password: str = Field(..., min_length=3, max_length=16,
                           description="Пароль должен быть в диапазоне от 3 до 16 символов")
     first_name: str = Field(..., min_length=1, max_length=50, description="Имя ученика, от 1 до 50 символов")
@@ -34,9 +34,9 @@ class SStudentAdd(BaseModel):
     phone_number: str = Field(..., description="Номер телефона в международном формате, начинающийся с '+'")
 
 
-
 class SStudentUpdate(BaseModel):
-    login: str = Field(..., min_length=3, max_length=32, description="Логин должен быть в диапазоне от 3 до 32 символов")
+    login: str = Field(..., min_length=3, max_length=32,
+                       description="Логин должен быть в диапазоне от 3 до 32 символов")
     password: str = Field(..., min_length=3, max_length=16,
                           description="Пароль должен быть в диапазоне от 3 до 16 символов")
     first_name: str = Field(..., min_length=1, max_length=50, description="Имя ученика, от 1 до 50 символов")

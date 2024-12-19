@@ -6,7 +6,7 @@ from jose import jwt, JWTError
 from passlib.context import CryptContext
 from pydantic import EmailStr
 
-from app.config import get_auth_data
+from app.database import get_auth_data
 from app.users.dao import UsersDAO
 
 # Создание контекста для хеширования паролей
@@ -71,3 +71,5 @@ async def get_current_user(token: str = Depends(get_token)):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User not found')
 
     return user
+
+

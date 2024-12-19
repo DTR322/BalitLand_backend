@@ -5,18 +5,18 @@ from sqlalchemy import func
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase, declared_attr, Mapped, mapped_column
 
-
 DB_HOST = 'LocalHost'
 DB_PORT = '5432'
 DB_NAME = 'postgres'
 DB_USER = 'postgres'
 DB_PASSWORD = '123'
+SECRET_KEY = 'gV64m9aIzFG4qpgVphvQbPQrtAO0nM-7YwwOvu0XPt5KJOjAy4AfgLkqJXYEt'
+ALGORITHM = 'HS256'
 
 DATABASE_URL = f'postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
 
 engine = create_async_engine(DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
-
 
 int_pk = Annotated[int, mapped_column(primary_key=True)]
 created_at = Annotated[datetime, mapped_column(server_default=func.now())]
@@ -31,3 +31,14 @@ class Base(AsyncAttrs, DeclarativeBase):
     @declared_attr.directive
     def __tablename__(cls) -> str:
         return f"{cls.__name__.lower()}s"
+
+
+def get_db_url():
+    return (
+        f"postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@"
+        f"{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    )
+
+
+def get_auth_data():
+    return {"secret_key": SECRET_KEY, "algorithm": ALGORITHM}
