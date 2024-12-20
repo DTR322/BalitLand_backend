@@ -25,4 +25,3 @@ class RBStudent:
                 'klass': self.klass, 'password': self.password, 'login': self.login, 'phone_number': self.phone_number}
         filtered_data = {key: value for key, value in data.items() if value is not None}
         return filtered_data
-

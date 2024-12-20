@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, status
 
 from app.users.auth import get_current_user
 from app.users.models import User

@@ -19,6 +19,13 @@ class SStudent(BaseModel):
     parent_last_name: str = Field(..., min_length=1, max_length=50, description="Фамилия родителя, от 1 до 50 символов")
     phone_number: str = Field(..., description="Номер телефона в международном формате, начинающийся с '+'")
 
+    @validator("phone_number")
+    @classmethod
+    def validate_phone_number(cls, value: str) -> str:
+        if not re.match(r'^\+\d{5,15}$', value):
+            raise ValueError('Номер телефона должен начинаться с "+" и содержать от 5 до 15 цифр')
+        return value
+
 
 class SStudentAdd(BaseModel):
     login: str = Field(..., min_length=3, max_length=32,
@@ -33,6 +40,13 @@ class SStudentAdd(BaseModel):
     parent_last_name: str = Field(..., min_length=1, max_length=50, description="Фамилия родителя, от 1 до 50 символов")
     phone_number: str = Field(..., description="Номер телефона в международном формате, начинающийся с '+'")
 
+    @validator("phone_number")
+    @classmethod
+    def validate_phone_number(cls, value: str) -> str:
+        if not re.match(r'^\+\d{5,15}$', value):
+            raise ValueError('Номер телефона должен начинаться с "+" и содержать от 5 до 15 цифр')
+        return value
+
 
 class SStudentUpdate(BaseModel):
     login: str = Field(..., min_length=3, max_length=32,
@@ -46,3 +60,10 @@ class SStudentUpdate(BaseModel):
     parent_first_name: str = Field(..., min_length=1, max_length=50, description="Имя родителя, от 1 до 50 символов")
     parent_last_name: str = Field(..., min_length=1, max_length=50, description="Фамилия родителя, от 1 до 50 символов")
     phone_number: str = Field(..., description="Номер телефона в международном формате, начинающийся с '+'")
+
+    @validator("phone_number")
+    @classmethod
+    def validate_phone_number(cls, value: str) -> str:
+        if not re.match(r'^\+\d{5,15}$', value):
+            raise ValueError('Номер телефона должен начинаться с "+" и содержать от 5 до 15 цифр')
+        return value
