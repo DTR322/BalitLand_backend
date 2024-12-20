@@ -10,7 +10,7 @@ router = APIRouter(prefix='/auth', tags=['Auth'])
 
 
 # Регистрация
-@router.post("/register/")
+@router.post("/register/", summary="Зарегистрироваться")
 async def register_user(user_data: SUserRegister) -> dict:
     user = await UsersDAO.find_one_or_none(email=user_data.email)
     if user:
@@ -44,7 +44,7 @@ response здесь представляет объект Response, которы
 
 # Изменить данные аккаунт
 @router.put("/update_description/")
-async def update_student_description(user_data: RBUser = Depends()) -> SUserUpdate | dict:
+async def update_user_description(user_data: RBUser = Depends()) -> SUserUpdate | dict:
     update_fields = {}
 
     if user_data.email:
@@ -73,7 +73,7 @@ async def update_student_description(user_data: RBUser = Depends()) -> SUserUpda
 
 # Удаление аккаунта
 @router.delete("/dell/{user_id}")
-async def dell_student_by_id(user_id: int) -> dict:
+async def dell_user_by_id(user_id: int) -> dict:
     check = await UsersDAO.delete_user_by_id(user_id=user_id)
     if check:
         return {"message": f"Пользователь с ID {user_id} удален!"}
