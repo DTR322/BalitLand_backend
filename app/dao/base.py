@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy import insert
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import update as sqlalchemy_update, delete as sqlalchemy_delete
@@ -78,4 +78,22 @@ class BaseDAO:
                     raise e
                 return result.rowcount
 
+    @classmethod
+    async def delete_by_id(cls, data_id: int):
+        async with async_session_maker() as session:
+            async with session.begin():
+                query = select(cls.model).filter_by(id=data_id)
+                result = await session.execute(query)
+                data_to_delete = result.scalar_one_or_none()
+
+                if not data_to_delete:
+                    return None
+
+                # Удаляем студента
+                await session.execute(
+                    delete(cls.model).filter_by(id=data_id)
+                )
+
+                await session.commit()
+                return data_id
 

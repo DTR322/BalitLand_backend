@@ -1,19 +1,18 @@
-from typing import Optional
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Path
 from app.students.dao import StudentDAO
-from app.students.rb import RBStudent
-from app.students.schemas import SStudent, SStudentAdd, SStudentUpdate
+from app.students.rb import RBStudentBase, RBStudentFilter, RBStudentAdd
+from app.students.schemas import SStudent, SStudentChange
 
 router = APIRouter(prefix='/students', tags=['Работа с учениками'])
 
 
-@router.get("/", summary="Получить всех студентов")
-async def get_all_students(request_body: RBStudent = Depends()) -> list[SStudent]:
+@router.get("/", summary="Получить всех студентов по фильтру")
+async def get_all_students(request_body: RBStudentBase = Depends()) -> list[SStudent]:
     return await StudentDAO.find_all(**request_body.to_dict())
 
 
-@router.post("/add/")
-async def register_user(student: RBStudent = Depends()) -> SStudentAdd | dict:
+@router.post("/add/", summary="Добавить Ученика")
+async def register_user(student: RBStudentAdd = Depends()) -> SStudentChange | dict:
     check = await StudentDAO.add(**student.to_dict())
     if check:
         return {"message": "Ученик успешно добавлен!", "student": student}
@@ -21,8 +20,8 @@ async def register_user(student: RBStudent = Depends()) -> SStudentAdd | dict:
         return {"message": "Ошибка при добавлении ученика!"}
 
 
-@router.put("/update_description/")
-async def update_student_description(student: RBStudent = Depends()) -> SStudentUpdate | dict:
+@router.put("/update_description/", summary="Обновить ученика")
+async def update_student_description(student: RBStudentAdd = Depends()) -> SStudentChange | dict:
     update_fields = {}
 
     if student.password:
@@ -49,9 +48,9 @@ async def update_student_description(student: RBStudent = Depends()) -> SStudent
         return {"message": "Ошибка при обновлении описания ученика!"}
 
 
-@router.delete("/dell/{student_id}")
-async def dell_student_by_id(student_id: int) -> dict:
-    check = await StudentDAO.delete_student_by_id(student_id=student_id)
+@router.delete("/dell/{student_id}", summary="Удалить ученика")
+async def dell_teacher_by_id(student_id: int = Path()) -> dict:
+    check = await StudentDAO.delete_by_id(data_id=student_id)
     if check:
         return {"message": f"Студент с ID {student_id} удален!"}
     else:

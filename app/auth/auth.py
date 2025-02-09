@@ -7,14 +7,14 @@ from passlib.context import CryptContext
 from pydantic import EmailStr
 
 from app.database import get_auth_data
-from app.users.dao import UsersDAO
+from app.auth.users.dao import UsersDAO
 
 # Создание контекста для хеширования паролей
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 # Функция для создания хэша пароля
-def get_password_hash(password: str) -> str:
+def get_password_hash(password: str) -> str:    
     return pwd_context.hash(password)
 
 
@@ -23,6 +23,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
+# Функция для создания токена
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(days=30)
@@ -32,6 +33,7 @@ def create_access_token(data: dict) -> str:
     return encode_jwt
 
 
+# Функция для получения токена
 def get_token(request: Request):
     token = request.cookies.get('users_access_token')
     if not token:
@@ -39,6 +41,7 @@ def get_token(request: Request):
     return token
 
 
+# Функция для опознания пользователя
 async def authenticate_user(email: EmailStr, password: str):
     user = await UsersDAO.find_one_or_none(email=email)
     if not user or verify_password(plain_password=password, hashed_password=user.password) is False:
@@ -46,6 +49,7 @@ async def authenticate_user(email: EmailStr, password: str):
     return user
 
 
+#
 async def get_current_user(token: str = Depends(get_token)):
     # Декодер
     try:
@@ -71,5 +75,4 @@ async def get_current_user(token: str = Depends(get_token)):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User not found')
 
     return user
-
 

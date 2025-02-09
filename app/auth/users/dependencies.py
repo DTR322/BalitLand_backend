@@ -1,7 +1,8 @@
 from fastapi import Depends, HTTPException
+from starlette import status
 
-from app.users.auth import get_current_user
-from app.users.models import User
+from app.auth.auth import get_current_user
+from app.auth.users.models import User
 
 
 async def get_current_admin_user(current_user: User = Depends(get_current_user)):
