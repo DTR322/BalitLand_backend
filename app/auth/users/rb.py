@@ -1,22 +1,29 @@
 from fastapi import Form
 
 
-class RBUser:
-    def __int__(self, email: str | None = None,
-                password: str | None = None,
-                phone_number: str | None = None,
-                first_name: str | None = None,
-                last_name: str | None = None):
+class RBUserBase:
+    def __init__(self, login: str | None = Form(None),
+                 password: str | None = Form(None)):
+        self.login = login
+        self.password = password
 
-        self.email = Form(email)
-        self.password = Form(password)
-        self.phone_number = Form(phone_number)
-        self.first_name = Form(first_name)
-        self.last_name = Form(last_name)
+    def to_dict(self) -> dict:
+        data = {'login': self.login, 'password': self.password}
 
-    def to_dict(self):
-        data = {'email': self.email, 'password': self.password, 'phone_number': self.phone_number,
-                'first_name': self.first_name, 'last_name': self.last_name}
+        filtered_data = {key: value for key, value in data.items() if value is not None}
+        return filtered_data
 
+
+class RBUserChange(RBUserBase):
+
+    def __init__(self, login: str | None = Form(None),
+                 password: str | None = Form(None),
+                 email: str | None = Form(None)):
+        super().__init__(login, password)
+        self.email = email
+
+    def to_dict(self) -> dict:
+        data = super().to_dict()
+        data.update({'email': self.email})
         filtered_data = {key: value for key, value in data.items() if value is not None}
         return filtered_data

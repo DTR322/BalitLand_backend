@@ -1,13 +1,13 @@
 from sqlalchemy import ForeignKey, text, Text
 from sqlalchemy.orm import relationship, Mapped, mapped_column
+
+from app.auth.users.models import User
 from app.database import Base, str_uniq, int_pk, str_null_true
 from datetime import date
 
 
 class Student(Base):
     id: Mapped[int_pk]
-    login: Mapped[str]
-    password: Mapped[str]
     first_name: Mapped[str]
     last_name: Mapped[str]
     klass: Mapped[int]
@@ -15,6 +15,9 @@ class Student(Base):
     parent_first_name: Mapped[str]
     parent_last_name: Mapped[str]
     phone_number: Mapped[str_uniq]
+
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    user: Mapped[User] = relationship("User", back_populates="students")
 
     def __str__(self):
         return (f"{self.__class__.__name__}(id={self.id}, "

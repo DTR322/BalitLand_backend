@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, Form, Path, HTTPException
+from fastapi import APIRouter, Depends, Path, HTTPException
 
 from app.auth.users.dependencies import get_current_admin_user
 from app.teachers.dao import TeacherDAO
-from app.teachers.rb import RBTeacherBase, RBTeacherFilter, RBTeacherAdd
+from app.teachers.rb import RBTeacherBase, RBTeacherFilter, RBTeacherRegister
 from app.teachers.schemas import STeacherChange, STeacher
 
 router = APIRouter(prefix='/teachers', tags=['Работа с преподавателями'])
@@ -19,7 +19,7 @@ async def get_teacher_by_filter(request_body: RBTeacherFilter = Depends()) -> ST
 
 
 @router.post("/add/", summary="добавить нового учителя")
-async def add_teacher(teacher: RBTeacherAdd = Depends(get_current_admin_user)) -> STeacherChange | dict:
+async def add_teacher(teacher: RBTeacherRegister = Depends(get_current_admin_user)) -> STeacherChange | dict:
     check = await TeacherDAO.add(**teacher.to_dict())
     if check:
         return {"message": "Новый учитель добавлен успешно", "teacher": teacher}
@@ -28,11 +28,9 @@ async def add_teacher(teacher: RBTeacherAdd = Depends(get_current_admin_user)) -
 
 
 @router.put("/update_teacher/", summary="обновить данные учителя")
-async def update_teacher(teacher: RBTeacherAdd = Depends(get_current_admin_user)) -> STeacherChange | dict:
+async def update_teacher(teacher: RBTeacherFilter = Depends(get_current_admin_user)) -> STeacherChange | dict:
     update_fields = {}
 
-    if teacher.password:
-        update_fields['password'] = teacher.password
     if teacher.first_name:
         update_fields['first_name'] = teacher.first_name
     if teacher.last_name:
@@ -42,7 +40,7 @@ async def update_teacher(teacher: RBTeacherAdd = Depends(get_current_admin_user)
         return {"message": "Нет данных для обновления."}
 
     check = await TeacherDAO.update(
-        filter_by={'login': teacher.login},
+        filter_by={'id': teacher.teacher_id},
         **update_fields
     )
     if check:

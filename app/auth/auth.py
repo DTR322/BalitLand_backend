@@ -42,8 +42,8 @@ def get_token(request: Request):
 
 
 # Функция для опознания пользователя
-async def authenticate_user(email: EmailStr, password: str):
-    user = await UsersDAO.find_one_or_none(email=email)
+async def authenticate_user(login: str, password: str):
+    user = await UsersDAO.find_one_or_none(login=login)
     if not user or verify_password(plain_password=password, hashed_password=user.password) is False:
         return None
     return user

@@ -3,14 +3,14 @@ from app.auth.auth import get_password_hash, authenticate_user, create_access_to
 from app.auth.users.dao import UsersDAO
 from app.auth.users.dependencies import get_current_admin_user
 from app.auth.users.models import User
-from app.auth.users.schemas import SUserRegister, SUserAuth
-from app.auth.users.rb import RBUser
+from app.auth.users.schemas import SUserChange, SUserAuth
+from app.auth.users.rb import RBUserChange, RBUserBase
 
 router = APIRouter(prefix='/auth', tags=['Auth'])
 
 
 @router.post("/register/", summary="создать аккаунт")
-async def register_user(user_data: RBUser = Depends()) -> SUserRegister | dict:
+async def register_user(user_data: RBUserChange = Depends()) -> SUserChange | dict:
     user = await UsersDAO.find_one_or_none(email=user_data.email)
     if user:
         raise HTTPException(
@@ -24,12 +24,12 @@ async def register_user(user_data: RBUser = Depends()) -> SUserRegister | dict:
 
 
 @router.post("/login/", summary="войти в аккаунт")
-async def auth_user(response: Response, user_data: RBUser = Depends()) -> SUserAuth | dict:
+async def auth_user(response: Response, user_data: RBUserBase = Depends()) -> SUserAuth | dict:
     '''
     Response здесь представляет объект Response, который используется для управления HTTP-ответом, отправляемым клиенту.
     Он позволяет установить заголовки ответа, установить куки и так далее.
     '''
-    check = await authenticate_user(email=user_data.email, password=user_data.password)
+    check = await authenticate_user(login=user_data.login, password=user_data.password)
     if check is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Неверная почта или пароль')
