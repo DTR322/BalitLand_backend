@@ -15,6 +15,7 @@ class User(Base):
     id: Mapped[int_pk]
     phone_number: Mapped[str_uniq]
     email: Mapped[str_uniq]
+    login: Mapped[str_uniq]
     password: Mapped[str]
     students: Mapped[List["Student"]] = relationship("Student", back_populates="user", cascade="all, delete-orphan")
 
