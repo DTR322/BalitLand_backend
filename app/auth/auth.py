@@ -4,10 +4,9 @@ from datetime import timedelta
 from fastapi import Request, HTTPException, status, Depends
 from jose import jwt, JWTError
 from passlib.context import CryptContext
-from pydantic import EmailStr
 
 from app.database import get_auth_data
-from app.auth.users.dao import UsersDAO
+from app.students.dao import StudentDAO
 
 # Создание контекста для хеширования паролей
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -43,7 +42,7 @@ def get_token(request: Request):
 
 # Функция для опознания пользователя
 async def authenticate_user(login: str, password: str):
-    user = await UsersDAO.find_one_or_none(login=login)
+    user = await StudentDAO.find_one_or_none(login=login)
     if not user or verify_password(plain_password=password, hashed_password=user.password) is False:
         return None
     return user
@@ -70,9 +69,9 @@ async def get_current_user(token: str = Depends(get_token)):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Не найден ID пользователя')
 
     # получаем данные о пользователе
-    user = await UsersDAO.find_one_or_none_by_id(int(user_id))
+    user = await StudentDAO.find_one_or_none_by_id(int(user_id))
     if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User not found')
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Пользователь не найден')
 
     return user
 

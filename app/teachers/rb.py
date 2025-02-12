@@ -1,8 +1,5 @@
 from fastapi import Form
 
-from app.auth.users.rb import RBUserChange
-
-
 class RBTeacherBase:
     def __init__(self,
                  first_name: str | None = Form(None),
@@ -16,7 +13,7 @@ class RBTeacherBase:
         return filtered_data
 
 
-class RBTeacherRegister(RBUserChange):
+class RBTeacherRegister:
     def __init__(self,
                  login: str | None = Form(None),
                  password: str | None = Form(None),
@@ -52,4 +49,3 @@ class RBTeacherFilter(RBTeacherBase):
         data.update({'teacher_id': self.teacher_id})
         filtered_data = {key: value for key, value in data.items() if value is not None}
         return filtered_data
-
